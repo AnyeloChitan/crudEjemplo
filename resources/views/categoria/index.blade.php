@@ -46,14 +46,14 @@ Categorias
                    <img src="img/view.png" alt=""> 
                 </a>             
                                       
-                   <a href="{{route('categoria.edit',$categoria)}}">
+                   <a href="{{route('categoria.edit',$categoria->id)}}">
                    <img src="img/edit.png" alt="">
                    </a>            
                                       
                
                     <form action="{{route('categoria.destroy',[$categoria->id])}}" method="POST" onsubmit="return confimarEliminacion()">
 
-                    {{-- permite gemrar el token para enviar por post --}}
+                    {{-- permite generar el token para enviar por post --}}
                     @csrf
                     {{-- agregar metodo delete --}}
                     @method('DELETE')

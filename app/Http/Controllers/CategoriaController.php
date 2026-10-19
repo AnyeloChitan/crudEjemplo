@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoriaRequest;
+use Illuminate\Routing\Controller;
+use Illuminate\Database\QueryException;
 
 class CategoriaController extends Controller
 {
@@ -29,9 +32,12 @@ class CategoriaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(CategoriaRequest $request)
+    {        
+
+    $categoria=Categoria::create($request->validated());
+
+     return redirect()->route('categoria.index')->with('success','Categoria agregada correctamente');
     }
 
     /**
@@ -45,24 +51,42 @@ class CategoriaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Categoria $categoria)
+    public function edit($id)
+
     {
-        //
+       $categoria=Categoria::findOrFail($id);
+        return view('categoria.edit',['categoria'=>$categoria]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categoria $categoria)
+    public function update(CategoriaRequest $request,$id)
     {
-        //
+        $categoria=Categoria::findOrFail($id);
+        $categoria->update($request->validated());
+
+        return redirect()->route('categoria.index')->with('success','Categoria actualizada correctamente');
+       
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categoria $categoria)
+    public function destroy($id)
     {
-        //
+        try{
+            $categoria=Categoria::findOrFail($id);
+            $categoria->delete();
+            return redirect()->route('categoria.index')->with('success','Categoria eliminada correctamente');
+
+        }catch(QueryException $e){
+          //codigo de violaciones de integridad de Sql:23000
+          if($e->getCode()==="23000"){
+            return redirect()->back()->with('Error','No se  puede eliminar categorias que tienen productos asociados');
+
+          }
+         return redirect()->back()->with('Error','Ocurrio un error inesperado con la base de datos');
+        }
     }
 }

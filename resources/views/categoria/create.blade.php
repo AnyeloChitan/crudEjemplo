@@ -20,7 +20,7 @@
             <div class="form-group">
                 <label for="nombre">Nombre de la Categoría</label>
                 <input type="text" id="nombre" name="nombre" required  class="form-control @error('nombre') is-invalid @enderror"
-        value="{{ old('nombre') }}">
+                 value="{{ old('nombre') }}">
             </div>
             <!-- Campo Descripción -->
             <div class="form-group">
